@@ -18,5 +18,6 @@ public class Employee {
     private String empName;
     private String empAddress;
     private String mNumber;
+    private String email;
 }
 
