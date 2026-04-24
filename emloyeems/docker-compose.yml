@@ -12,10 +12,7 @@ services:
       - "3307:3306" # Map host port 3307 to container port 3306 (avoids conflicts)
     volumes:
       - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+    
 
   # Spring Boot Application Service
   web:

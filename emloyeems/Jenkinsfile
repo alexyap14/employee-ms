@@ -57,21 +57,24 @@ pipeline {
         }
     }
     post {
-        always {
-            echo 'Cleaning up workspace'
-            deleteDir()
-        }
         success {
             echo 'Build succeeded!!!'
-            echo 'Employee Management System is running at http://localhost:8080/api/v1/employee'
-            echo 'MySQL is accessible on port 3307'
         }
         failure {
-            // Stop containers if build fails
-            dir('emloyeems') {
-                bat 'docker-compose down -v'
+            // We only run this if the folder actually exists!
+            script {
+                if (fileExists('emloyeems/docker-compose.yml')) {
+                    dir('emloyeems') {
+                        bat 'docker-compose down -v'
+                    }
+                }
             }
             echo 'Build failed!'
+        }
+        always {
+            echo 'Pipeline finished.'
+            // REMOVE or COMMENT OUT deleteDir() for now
+            // deleteDir() 
         }
     }
 }
