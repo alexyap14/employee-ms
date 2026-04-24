@@ -2,7 +2,8 @@ pipeline {
     agent any
     environment {
         JAVA_HOME = "C:\\Program Files\\Java\\jdk-21.0.10"
-        PATH = "${JAVA_HOME}\\bin;${env.PATH}"
+        MAVEN_HOME = "C:\\Program Files\\apache-maven-3.9.14-bin\\apache-maven-3.9.14"
+        PATH = "${MAVEN_HOME}\\bin;${JAVA_HOME}\\bin;${env.PATH}"
     }
     stages {
         stage('Verify Environment') {
