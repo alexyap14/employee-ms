@@ -27,7 +27,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword
     depends_on:
-      db
+      - db  # This dash makes it an array!
 
 volumes:
   db_data:
