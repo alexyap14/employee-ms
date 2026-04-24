@@ -44,13 +44,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir('emloyeems') {
-                    // Stop and remove previous containers
+                    
                     bat 'docker-compose down -v'
-                    // Build Docker images and start services (db + web)
+                    
                     bat 'docker-compose up -d --build'
-                    // Wait for services to be ready
+                    
                     sleep 15
-                    // Show running containers status
+                    
                     bat 'docker-compose ps'
                 }
             }
@@ -61,7 +61,7 @@ pipeline {
             echo 'Build succeeded!!!'
         }
         failure {
-            // We only run this if the folder actually exists!
+            
             script {
                 if (fileExists('emloyeems/docker-compose.yml')) {
                     dir('emloyeems') {
@@ -73,8 +73,7 @@ pipeline {
         }
         always {
             echo 'Pipeline finished.'
-            // REMOVE or COMMENT OUT deleteDir() for now
-            // deleteDir() 
+             
         }
     }
 }
