@@ -20,7 +20,7 @@ docker-compose ps
 
 echo ""
 echo "🎉 The Employee Management System is now running in a staging environment!"
-echo "📡 Access the API at: http://localhost:8080/api/v1/employee"
+echo "📡 Access the API at: http://localhost:8081/api/v1/employee"
 echo "🗄️  MySQL is accessible on port 3307."
 echo ""
 echo "To stop the environment, run: docker-compose down"
