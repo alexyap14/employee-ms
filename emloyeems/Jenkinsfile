@@ -1,0 +1,76 @@
+pipeline {
+    agent any
+    environment {
+        JAVA_HOME = "C:\\Program Files\\Java\\jdk-21.0.10"
+        PATH = "${JAVA_HOME}\\bin;${env.PATH}"
+    }
+    stages {
+        stage('Verify Environment') {
+            steps {
+                bat 'echo JAVA_HOME=%JAVA_HOME%'
+                bat 'java -version'
+                bat 'mvn -version'
+                bat 'docker --version'
+                bat 'docker-compose --version'
+            }
+        }
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/alexyap14/employee-ms.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('emloyeems') {
+                    bat 'mvn clean package -DskipTests'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir('emloyeems') {
+                    bat 'mvn test'
+                }
+            }
+        }
+        stage('Test Reports') {
+            steps {
+                dir('emloyeems') {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                dir('emloyeems') {
+                    // Stop and remove previous containers
+                    bat 'docker-compose down -v'
+                    // Build Docker images and start services (db + web)
+                    bat 'docker-compose up -d --build'
+                    // Wait for services to be ready
+                    bat 'timeout /t 15'
+                    // Show running containers status
+                    bat 'docker-compose ps'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Cleaning up workspace'
+            deleteDir()
+        }
+        success {
+            echo 'Build succeeded!!!'
+            echo 'Employee Management System is running at http://localhost:8080/api/v1/employee'
+            echo 'MySQL is accessible on port 3307'
+        }
+        failure {
+            // Stop containers if build fails
+            dir('emloyeems') {
+                bat 'docker-compose down -v'
+            }
+            echo 'Build failed!'
+        }
+    }
+}
